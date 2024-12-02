@@ -3,7 +3,33 @@
 <head>
     <title>Pagamento</title>
     <link rel="stylesheet" href="/styles.css">
-    <script src="/scripts.js" defer></script>
+    <script>
+        async function realizarPagamento() {
+            const preco = 8; // Preço fixo para exemplo
+            const cobertura = 'morango'; // Cobertura fixa para exemplo
+
+            try {
+                const response = await fetch('/pagamento', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ preco, cobertura }),
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    // Redireciona o usuário para o link de pagamento
+                    window.location.href = data.url;
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error('Erro ao processar pagamento:', error);
+                alert('Erro ao processar pagamento.');
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Página de Pagamento</h1>
