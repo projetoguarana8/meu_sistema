@@ -5,7 +5,7 @@ const app = express();
 
 // Configuração do Mercado Pago (adicione sua chave de acesso)
 mercadopago.configure({
-    access_token: 'TEST-8273006733257385-112812-1b4d12c15bed39ef93f55c43e661770b-294303894' // Substitua pelo seu token de acesso do Mercado Pago
+    access_token: 'TEST-8273006733257385-112812-1b4d12c15bed39ef93f55c43e661770b-294303894' // Substitua pelo seu token do Mercado Pago
 });
 
 // Configuração do EJS
@@ -24,39 +24,17 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-// Rota para receber dados do preço
-app.post('/escolha-preco', (req, res) => {
+// Rota para processar a escolha do preço
+app.post('/pagamento', async (req, res) => {
     const { preco } = req.body;
+
     if (!preco) {
         return res.status(400).json({ error: 'Preço não enviado.' });
     }
-    console.log(`Preço recebido: R$${preco}`);
-    res.status(200).json({ message: `Preço R$${preco} salvo com sucesso.` });
-});
-
-// Rota: escolha de cobertura
-app.post('/escolha-cobertura', (req, res) => {
-    const { cobertura } = req.body;
-    if (!cobertura) {
-        return res.status(400).json({ error: 'Cobertura não enviada.' });
-    }
-    console.log(`Cobertura recebida: ${cobertura}`);
-    res.status(200).json({ message: `Cobertura ${cobertura} salva com sucesso.` });
-});
-
-// Rota: pagamento
-app.post('/pagamento', async (req, res) => {
-    const { preco, cobertura } = req.body;
-
-    if (!preco || !cobertura) {
-        return res.status(400).json({ error: 'Dados incompletos para o pagamento.' });
-    }
-
-    console.log(`Processando pagamento de R$${preco} com cobertura ${cobertura}`);
 
     // Criação do item de pagamento
     const item = {
-        title: `Guaraná com cobertura de ${cobertura}`,
+        title: `Guaraná - Preço R$${preco}`,
         quantity: 1,
         currency_id: 'BRL',
         unit_price: parseFloat(preco)
@@ -74,11 +52,11 @@ app.post('/pagamento', async (req, res) => {
             auto_return: 'approved'
         });
 
-        // Enviar o link de pagamento para o cliente
-        res.status(200).json({ url: preference.body.init_point });
+        // Redireciona o usuário ao link de pagamento
+        res.redirect(preference.body.init_point);
     } catch (error) {
         console.error('Erro ao criar pagamento:', error);
-        res.status(500).json({ error: 'Erro ao processar pagamento.' });
+        res.status(500).send('Erro ao processar pagamento.');
     }
 });
 
