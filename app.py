@@ -1,27 +1,30 @@
-from flask import Flask, render_template, request, redirect, url_for # type: ignore
-import mercadopago # type: ignore
+import mercadopago
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Configuração do Mercado Pago
-mp = mercadopago.SDK("SEU_ACCESS_TOKEN_AQUI")  # Substitua pelo seu token do Mercado Pago
+# Configurar o Mercado Pago SDK
+sdk = mercadopago.SDK("TEST-8273006733257385-112812-1b4d12c15bed39ef93f55c43e661770b-294303894")  # Substitua pelo seu Access Token
 
 @app.route('/')
-def index():
+def escolha_preco():
     return render_template('index.html')
+
+@app.route('/cobertura', methods=['POST'])
+def escolha_cobertura():
+    preco = request.form.get('preco')
+    return render_template('cobertura.html', preco=preco)
 
 @app.route('/pagamento', methods=['POST'])
 def pagamento():
     preco = request.form.get('preco')
+    cobertura = request.form.get('cobertura')
 
-    if not preco:
-        return "Erro: Preço não selecionado.", 400
-
-    # Configurando o item para pagamento
+    # Criar preferência de pagamento
     preference_data = {
         "items": [
             {
-                "title": f"Guaraná - R${preco}",
+                "title": f"Guaraná com {cobertura}",
                 "quantity": 1,
                 "currency_id": "BRL",
                 "unit_price": float(preco)
@@ -29,29 +32,28 @@ def pagamento():
         ],
         "back_urls": {
             "success": url_for('sucesso', _external=True),
-            "failure": url_for('erro', _external=True),
+            "failure": url_for('falha', _external=True),
             "pending": url_for('pendente', _external=True)
         },
         "auto_return": "approved"
     }
 
-    # Criando preferência de pagamento
-    preference_response = mp.preference().create(preference_data)
-    payment_link = preference_response["response"]["init_point"]
+    preference = sdk.preference().create(preference_data)
+    init_point = preference["response"]["init_point"]
 
-    return redirect(payment_link)
+    return redirect(init_point)
 
 @app.route('/sucesso')
 def sucesso():
-    return "<h1>Pagamento realizado com sucesso!</h1>"
+    return "Pagamento realizado com sucesso!"
 
-@app.route('/erro')
-def erro():
-    return "<h1>Pagamento falhou. Tente novamente.</h1>"
+@app.route('/falha')
+def falha():
+    return "O pagamento falhou. Tente novamente."
 
 @app.route('/pendente')
 def pendente():
-    return "<h1>Seu pagamento está pendente. Aguarde a aprovação.</h1>"
+    return "O pagamento está pendente. Aguarde a confirmação."
 
 if __name__ == '__main__':
     app.run(debug=True)

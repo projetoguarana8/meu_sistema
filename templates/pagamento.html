@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pagamento</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Processando pagamento...</h1>
+    <h1>Confirmação de Pagamento</h1>
+    <p>Preço: R${{ preco }}</p>
+    <p>Cobertura: {{ cobertura }}</p>
+    <button onclick="realizarPagamento()">Pagar com Mercado Pago</button>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escolha o Preço</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Escolha o preço do Guaraná</h1>
-    <form action="/pagamento" method="POST">
-        <label>
-            <input type="radio" name="preco" value="8" required> R$8,00
-        </label><br>
-        <label>
-            <input type="radio" name="preco" value="9" required> R$9,00
-        </label><br>
-        <button type="submit">Ir para o pagamento</button>
+    <h1>Escolha o Preço do Guaraná</h1>
+    <form action="/cobertura" method="POST">
+        <button name="preco" value="8">Guaraná - R$8</button>
+        <button name="preco" value="9">Guaraná - R$9</button>
     </form>
-    <script src="/static/js/scripts.js"></script>
 </body>
 </html>

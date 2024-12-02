@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha a Cobertura</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Escolha a Cobertura</h1>
+    <form action="/pagamento" method="POST">
+        <input type="hidden" name="preco" value="{{ preco }}">
+        <label>
+            <input type="radio" name="cobertura" value="Chocolate" required> Chocolate
+        </label>
+        <label>
+            <input type="radio" name="cobertura" value="Morango"> Morango
+        </label>
+        <button type="submit">Realizar Pagamento</button>
+    </form>
+</body>
+</html>
