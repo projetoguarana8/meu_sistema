@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Configurar o Mercado Pago SDK
-sdk = mercadopago.SDK("TEST-8273006733257385-112812-1b4d12c15bed39ef93f55c43e661770b-294303894")  # Substitua pelo seu Access Token
+sdk = mercadopago.SDK("APP_USR-8273006733257385-112812-1c84938b60e15305a58b0da20ec2708e-294303894")  # Substitua pelo seu Access Token
 
 @app.route('/')
 def escolha_preco():
