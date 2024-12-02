@@ -1,5 +1,6 @@
 import mercadopago
 from flask import Flask, render_template, request, redirect, url_for
+import os
 
 app = Flask(__name__)
 
@@ -56,4 +57,5 @@ def pendente():
     return "O pagamento está pendente. Aguarde a confirmação."
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Porta configurada pelo Render ou padrão 5000
+    app.run(host='0.0.0.0', port=port)
