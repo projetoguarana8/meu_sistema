@@ -1,22 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha a Cobertura</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Escolha sua Cobertura</title>
 </head>
 <body>
-    <h1>Escolha a Cobertura</h1>
+    <h1>Escolha sua Cobertura</h1>
+
     <form action="/pagamento" method="POST">
         <input type="hidden" name="preco" value="{{ preco }}">
-        <label>
-            <input type="radio" name="cobertura" value="Chocolate" required> Chocolate
-        </label>
-        <label>
-            <input type="radio" name="cobertura" value="Morango"> Morango
-        </label>
-        <button type="submit">Realizar Pagamento</button>
+        <input type="hidden" name="quantidade" value="{{ quantidade }}">
+
+        <label for="cobertura">Escolha a cobertura:</label><br>
+        <select name="cobertura" required>
+            <option value="Chocolate">Chocolate</option>
+            <option value="Morango">Morango</option>
+            <option value="Baunilha">Baunilha</option>
+        </select><br><br>
+
+        <input type="submit" value="Realizar Pagamento">
     </form>
+
+    <p>Preço por unidade: R$ {{ preco }}</p>
+    <p>Quantidade: {{ quantidade }}</p>
+    <p>Total: R$ {{ preco|float * quantidade }}</p>
 </body>
 </html>
