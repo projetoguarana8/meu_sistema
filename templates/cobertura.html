@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha sua Cobertura</title>
+    <title>Escolher Cobertura</title>
 </head>
 <body>
-    <h1>Escolha sua Cobertura</h1>
+    <h1>Escolha a Cobertura para seu Guaraná</h1>
+    <form action="{{ url_for('pagamento') }}" method="POST">
+        <label for="preco">Preço (R$):</label>
+        <input type="text" name="preco" value="{{ preco }}" readonly>
 
-    <form action="/pagamento" method="POST">
+        <label for="quantidade">Quantidade:</label>
+        <input type="text" name="quantidade" value="{{ quantidade }}" readonly>
+
+        <label for="cobertura">Escolha a cobertura:</label>
+        <select name="cobertura" id="cobertura" required>
+            <option value="chocolate">Chocolate</option>
+            <option value="morango">Morango</option>
+            <option value="coco">Coco</option>
+        </select>
+
+        <button type="submit">Continuar com Mercado Pago</button>
+    </form>
+
+    <h2>Ou, se preferir, pague em dinheiro:</h2>
+    <form action="{{ url_for('pagamento_dinheiro') }}" method="POST">
+        <label for="valor_pago">Digite o valor pago em dinheiro:</label>
+        <input type="number" id="valor_pago" name="valor_pago" step="0.01" required>
+
         <input type="hidden" name="preco" value="{{ preco }}">
         <input type="hidden" name="quantidade" value="{{ quantidade }}">
 
-        <label for="cobertura">Escolha a cobertura:</label><br>
-        <select name="cobertura" required>
-            <option value="Chocolate">Chocolate</option>
-            <option value="Morango">Morango</option>
-            <option value="Baunilha">Baunilha</option>
-        </select><br><br>
-
-        <input type="submit" value="Realizar Pagamento">
+        <button type="submit">Pagar com Dinheiro</button>
     </form>
-
-    <p>Preço por unidade: R$ {{ preco }}</p>
-    <p>Quantidade: {{ quantidade }}</p>
-    <p>Total: R$ {{ preco|float * quantidade }}</p>
 </body>
 </html>

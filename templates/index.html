@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha seu Guaraná</title>
+    <title>Escolher Preço</title>
 </head>
 <body>
-    <h1>Escolha seu Guaraná</h1>
+    <h1>Escolha o Preço e Quantidade de Guaraná</h1>
+    <form action="{{ url_for('escolha_cobertura') }}" method="POST">
+        <label for="preco">Escolha o preço do Guaraná (R$):</label>
+        <select name="preco" id="preco" required>
+            <option value="5.00">R$ 5,00</option>
+            <option value="6.00">R$ 6,00</option>
+            <option value="7.00">R$ 7,00</option>
+        </select>
 
-    <form action="/cobertura" method="POST">
-        <label for="preco">Escolha o preço:</label><br>
-        <input type="radio" name="preco" value="8" required> R$ 8,00
-        <input type="radio" name="preco" value="9" required> R$ 9,00<br><br>
+        <label for="quantidade">Escolha a quantidade:</label>
+        <input type="number" name="quantidade" id="quantidade" value="1" min="1" required>
 
-        <label for="quantidade">Quantidade:</label><br>
-        <input type="number" name="quantidade" min="1" value="1" required><br><br>
+        <button type="submit">Próximo</button>
+    </form>
 
-        <input type="submit" value="Escolher Cobertura">
+    <h2>Ou, se preferir, pague em dinheiro:</h2>
+    <form action="{{ url_for('pagamento_dinheiro') }}" method="POST">
+        <label for="valor_pago">Digite o valor pago em dinheiro:</label>
+        <input type="number" id="valor_pago" name="valor_pago" step="0.01" required>
+
+        <input type="hidden" name="preco" value="{{ preco }}">
+        <input type="hidden" name="quantidade" value="{{ quantidade }}">
+
+        <button type="submit">Pagar com Dinheiro</button>
     </form>
 </body>
 </html>

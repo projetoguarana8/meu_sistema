@@ -50,6 +50,19 @@ def pagamento():
 
     return redirect(init_point)
 
+@app.route('/dinheiro', methods=['POST'])
+def pagamento_dinheiro():
+    preco = request.form.get('preco')
+    quantidade = int(request.form.get('quantidade'))  # Obtém a quantidade de Guaraná
+
+    # Calcula o preço total
+    total = float(preco) * quantidade
+
+    valor_pago = float(request.form.get('valor_pago'))  # Valor pago em dinheiro
+    troco = valor_pago - total  # Calcula o troco
+
+    return render_template('troco.html', total=total, valor_pago=valor_pago, troco=troco)
+
 @app.route('/sucesso')
 def sucesso():
     return "Pagamento realizado com sucesso!"
