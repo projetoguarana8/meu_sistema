@@ -26,14 +26,15 @@ def pagamento():
     # Calcula o preço total
     total = float(preco) * quantidade
 
-    # Criar preferência de pagamento
+    # Criar preferência de pagamento com descrição detalhada
     preference_data = {
         "items": [
             {
-                "title": f"Guaraná com {cobertura}",
+                "title": f"Guaraná com {cobertura} - {quantidade} unidade(s)",  # Nome do item com cobertura e quantidade
                 "quantity": quantidade,
                 "currency_id": "BRL",
-                "unit_price": float(preco)
+                "unit_price": float(preco),
+                "description": f"Guaraná com {cobertura} ({quantidade} unidade(s)) - R${total:.2f}"  # Descrição detalhada
             }
         ],
         "back_urls": {
