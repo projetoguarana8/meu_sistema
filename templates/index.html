@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escolha o Preço</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Escolha seu Guaraná</title>
 </head>
 <body>
-    <h1>Escolha o Preço do Guaraná</h1>
+    <h1>Escolha seu Guaraná</h1>
+
     <form action="/cobertura" method="POST">
-        <button name="preco" value="8">Guaraná - R$8</button>
-        <button name="preco" value="9">Guaraná - R$9</button>
+        <label for="preco">Escolha o preço:</label><br>
+        <input type="radio" name="preco" value="8" required> R$ 8,00
+        <input type="radio" name="preco" value="9" required> R$ 9,00<br><br>
+
+        <label for="quantidade">Quantidade:</label><br>
+        <input type="number" name="quantidade" min="1" value="1" required><br><br>
+
+        <input type="submit" value="Escolher Cobertura">
     </form>
 </body>
 </html>

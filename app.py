@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# Configurar o Mercado Pago SDK
+# Configurar o Mercado Pago SDK com o seu Access Token
 sdk = mercadopago.SDK("APP_USR-8273006733257385-112812-1c84938b60e15305a58b0da20ec2708e-294303894")  # Substitua pelo seu Access Token
 
 @app.route('/')
@@ -16,7 +16,6 @@ def escolha_cobertura():
     preco = request.form.get('preco')
     quantidade = int(request.form.get('quantidade'))  # Captura a quantidade
     return render_template('cobertura.html', preco=preco, quantidade=quantidade)
-
 
 @app.route('/pagamento', methods=['POST'])
 def pagamento():
@@ -45,11 +44,11 @@ def pagamento():
         "auto_return": "approved"
     }
 
+    # Cria a preferência de pagamento no Mercado Pago
     preference = sdk.preference().create(preference_data)
-    init_point = preference["response"]["init_point"]
+    init_point = preference["response"]["init_point"]  # Obtém o link de pagamento
 
     return redirect(init_point)
-
 
 @app.route('/sucesso')
 def sucesso():
