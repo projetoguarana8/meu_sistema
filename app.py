@@ -4,8 +4,8 @@ import os
 
 app = Flask(__name__)
 
-# Configurar o Mercado Pago SDK com o seu Access Token
-sdk = mercadopago.SDK("APP_USR-8273006733257385-112812-1c84938b60e15305a58b0da20ec2708e-294303894")  # Substitua pelo seu Access Token
+# Configurar o Mercado Pago SDK
+sdk = mercadopago.SDK("TEST-8273006733257385-112812-1b4d12c15bed39ef93f55c43e661770b-294303894")  # Substitua pelo seu Access Token
 
 @app.route('/')
 def escolha_preco():
@@ -26,11 +26,11 @@ def pagamento():
     # Calcula o preço total
     total = float(preco) * quantidade
 
-    # Criar preferência de pagamento com descrição detalhada
+    # Criar preferência de pagamento
     preference_data = {
         "items": [
             {
-                "title": f"Guaraná com {cobertura} - {quantidade} unidade(s)",  # Nome do item com cobertura e quantidade
+                "title": f"Guaraná com {cobertura}",
                 "quantity": quantidade,
                 "currency_id": "BRL",
                 "unit_price": float(preco)
@@ -44,24 +44,10 @@ def pagamento():
         "auto_return": "approved"
     }
 
-    # Cria a preferência de pagamento no Mercado Pago
     preference = sdk.preference().create(preference_data)
-    init_point = preference["response"]["init_point"]  # Obtém o link de pagamento
+    init_point = preference["response"]["init_point"]
 
     return redirect(init_point)
-
-@app.route('/dinheiro', methods=['POST'])
-def pagamento_dinheiro():
-    preco = request.form.get('preco')
-    quantidade = int(request.form.get('quantidade'))  # Obtém a quantidade de Guaraná
-
-    # Calcula o preço total
-    total = float(preco) * quantidade
-
-    valor_pago = float(request.form.get('valor_pago'))  # Valor pago em dinheiro
-    troco = valor_pago - total  # Calcula o troco
-
-    return render_template('troco.html', total=total, valor_pago=valor_pago, troco=troco)
 
 @app.route('/sucesso')
 def sucesso():
@@ -74,6 +60,36 @@ def falha():
 @app.route('/pendente')
 def pendente():
     return "O pagamento está pendente. Aguarde a confirmação."
+
+# Rota para receber as notificações do Mercado Pago (Webhook)
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    # O Mercado Pago enviará um payload com os dados do pagamento
+    data = request.json
+
+    # Verifique se a notificação foi recebida corretamente
+    print(f"Notificação recebida: {data}")
+
+    # Aqui você pode verificar o status do pagamento
+    payment_id = data.get("data", {}).get("id")
+
+    # Recupere a informação do pagamento através da API do Mercado Pago
+    payment_info = sdk.payment().get(payment_id)
+
+    status = payment_info["response"]["status"]
+    
+    # Verifique o status do pagamento e tome as ações necessárias
+    if status == "approved":
+        print("Pagamento aprovado")
+        # Aqui você pode atualizar o status do pagamento no banco de dados ou tomar outras ações
+    elif status == "pending":
+        print("Pagamento pendente")
+        # Aqui você pode marcar como "pendente"
+    elif status == "rejected":
+        print("Pagamento rejeitado")
+        # Aqui você pode marcar como "rejeitado"
+    
+    return '', 200  # Responde que recebeu corretamente a notificação
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Porta configurada pelo Render ou padrão 5000
