@@ -33,8 +33,7 @@ def pagamento():
                 "title": f"Guaraná com {cobertura} - {quantidade} unidade(s)",  # Nome do item com cobertura e quantidade
                 "quantity": quantidade,
                 "currency_id": "BRL",
-                "unit_price": float(preco),
-                "description": f"Guaraná com {cobertura} ({quantidade} unidade(s)) - R${total:.2f}"  # Descrição detalhada
+                "unit_price": float(preco)
             }
         ],
         "back_urls": {
