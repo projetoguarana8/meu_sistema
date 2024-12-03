@@ -14,19 +14,25 @@ def escolha_preco():
 @app.route('/cobertura', methods=['POST'])
 def escolha_cobertura():
     preco = request.form.get('preco')
-    return render_template('cobertura.html', preco=preco)
+    quantidade = int(request.form.get('quantidade'))  # Captura a quantidade
+    return render_template('cobertura.html', preco=preco, quantidade=quantidade)
+
 
 @app.route('/pagamento', methods=['POST'])
 def pagamento():
     preco = request.form.get('preco')
     cobertura = request.form.get('cobertura')
+    quantidade = int(request.form.get('quantidade'))  # Obtém a quantidade de Guaraná
+
+    # Calcula o preço total
+    total = float(preco) * quantidade
 
     # Criar preferência de pagamento
     preference_data = {
         "items": [
             {
                 "title": f"Guaraná com {cobertura}",
-                "quantity": 1,
+                "quantity": quantidade,
                 "currency_id": "BRL",
                 "unit_price": float(preco)
             }
@@ -43,6 +49,7 @@ def pagamento():
     init_point = preference["response"]["init_point"]
 
     return redirect(init_point)
+
 
 @app.route('/sucesso')
 def sucesso():
