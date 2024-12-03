@@ -82,26 +82,24 @@ def pagamento_dinheiro():
 # Webhook para processar notificações do Mercado Pago
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    # Assinatura secreta configurada no Mercado Pago
-    signature = request.headers.get("X-Mercadopago-Signature")
-    secret = "bb547928cc2e1b0ce376d08618a8cd8fad16ed0debba4a316e349710d06e848c"  # Substitua pela sua chave secreta
+    # Verifica se a assinatura secreta está presente no cabeçalho
+    secret = request.headers.get('X-Hook-Secret')
+    if secret != os.getenv('bb547928cc2e1b0ce376d08618a8cd8fad16ed0debba4a316e349710d06e848c'):  # Confirma a assinatura
+        return "Unauthorized", 401
 
-    # Verificar assinatura secreta
-    if signature != secret:
-        return "Unauthorized", 403
-
-    # Processar os dados do webhook (exemplo simples)
+    # Captura os dados enviados pelo webhook
     data = request.json
-    payment_status = data['data']['status']
-    
-    # Log ou manipulação de acordo com o status do pagamento
-    if payment_status == 'approved':
-        print("Pagamento aprovado")
-    elif payment_status == 'pending':
-        print("Pagamento pendente")
-    elif payment_status == 'rejected':
-        print("Pagamento rejeitado")
+    if not data:
+        return "Bad Request", 400
 
+    # Processa a notificação
+    action = data.get('action')
+    payment_id = data.get('data', {}).get('id')
+
+    if action == "payment.updated":
+        # Insira a lógica de tratamento para pagamentos atualizados aqui
+        print(f"Pagamento atualizado! ID: {payment_id}")
+    
     return "OK", 200
 
 if __name__ == '__main__':
