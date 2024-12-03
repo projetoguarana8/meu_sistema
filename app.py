@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Configurar o Mercado Pago SDK com o seu Access Token
-sdk = mercadopago.SDK("APP_USR-8273006733257385-112812-1c84938b60e15305a58b0da20ec2708e-294303894")  # Substitua pelo seu Access Token
+sdk = mercadopago.SDK(os.getenv("APP_USR-8273006733257385-112812-1c84938b60e15305a58b0da20ec2708e-294303894"))  # Substitua pela sua chave de acesso
 
 @app.route('/')
 def escolha_preco():
@@ -84,7 +84,7 @@ def pagamento_dinheiro():
 def webhook():
     # Verifica se a assinatura secreta está presente no cabeçalho
     secret = request.headers.get('X-Hook-Secret')
-    if secret != os.getenv('bb547928cc2e1b0ce376d08618a8cd8fad16ed0debba4a316e349710d06e848c'):  # Confirma a assinatura
+    if secret != os.getenv('bb547928cc2e1b0ce376d08618a8cd8fad16ed0debba4a316e349710d06e848'):  # Substitua por sua chave secreta
         return "Unauthorized", 401
 
     # Captura os dados enviados pelo webhook
